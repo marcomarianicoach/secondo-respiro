@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 
 // ==========================
@@ -432,5 +431,3 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
-
-
