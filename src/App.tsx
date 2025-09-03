@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 
 // ==========================
@@ -7,7 +7,9 @@ import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 const CALENDLY_OSSIGENO = "https://calendly.com/marcomarianicoach/ossigeno-45-gratuito"; // call gratuita
 const CALENDLY_SESSION = "https://calendly.com/marcomarianicoach"; // pagina con scelta tipologie
 // Video sorgente (se locale, verrà mostrato un avviso)
-const VIDEO_SRC = "/Videolanding.Mp4"; // // 
+// Video sorgente (se locale, verrà mostrato un avviso)
+const VIDEO_SRC = "/VIDEOLANDING.MP4"; // MP4 H.264/AAC consigliato
+const VIDEO_SRC_WEBM = "/VIDEOLANDING.webm"; // opzionale fallback WebM (VP9/Opus) // // 
 // Poster inline (nessuna rete); sostituisci con un URL https se vuoi un frame reale
 const VIDEO_POSTER = `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0057FF" offset="0"/><stop stop-color="#7AA2FF" offset="1"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="56" fill="#fff" opacity="0.9">Secondo Respiro · Video</text></svg>')}`;
 
@@ -196,6 +198,7 @@ function Hero() {
               <>
                 <video id="video" className="w-full h-40 md:h-56 rounded bg-black/20 z-10 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
                   <source src={VIDEO_SRC} type="video/mp4" />
+                  <source src={VIDEO_SRC_WEBM} type="video/webm" />
                   Il tuo browser non supporta il tag video.
                 </video>
                 {isLocal && (
@@ -306,11 +309,89 @@ function Objections() {
 }
 
 function Testimonials() {
+  // Dati delle testimonianze (facili da estendere)
+  const items = [
+    {
+      body: (
+        <>
+          “Cercavo proprio Ossigeno... ed è quello che è arrivato! Volevo ritrovare fiducia nella mia persona e nella mia visione dal punto di vista del lavoro! È stato intenso ma un percorso vissuto e vero che ha lasciato un ottimo segno!”
+        </>
+      ),
+      author: "— G, 37 anni, professionista sanitario",
+    },
+    {
+      body: (
+        <>
+          <p>“𝐼𝑜 𝑡𝑖 ℎ𝑜 𝑠𝑜𝑙𝑜 𝑎𝑖𝑢𝑡𝑎𝑡𝑜 𝑎 𝑣𝑒𝑑𝑒𝑟𝑒 𝑐𝑜𝑠𝑒 𝑐ℎ𝑒, 𝑖𝑛 𝑡𝑒, 𝑝𝑒𝑟 𝑚𝑒 𝑒𝑟𝑎𝑛𝑜 𝑙𝑎𝑚𝑝𝑎𝑛𝑡𝑖. 𝐻𝑎𝑖 𝑓𝑎𝑡𝑡𝑜 𝑡𝑢𝑡𝑡𝑜 𝑡𝑢.”</p>
+          <p className="mt-4 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800">Una frase che non dimenticherò, nata da un confronto autentico nel mio percorso di coaching con Marco iniziato a Maggio 2025.</p>
+          <p className="mt-2 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800">Non è facile parlare apertamente, ma quando trovi qualcuno che ti ascolta senza giudicare o imporre… il mondo cambia con gentilezza.</p>
+          <p className="mt-2 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800">Un grazie sincero al mio coach Marco per non avermi mai detto “cosa fare”, ma per avermi aiutato a rivedere me stesso con occhi nuovi, riempiendo con le giuste cose il mio zainetto!</p>
+        </>
+      ),
+      author: "— F, 43 anni, real estate manager",
+    },
+  ];
+
+  // Slider solo per mobile (swipe + bottoni); desktop = griglia 2 colonne
+  const [idx, setIdx] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const deltaX = useRef(0);
+  const go = (dir: number) => setIdx((v) => (v + dir + items.length) % items.length);
+
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchMove = (e: React.TouchEvent) => { if (touchStartX.current != null) deltaX.current = e.touches[0].clientX - touchStartX.current; };
+  const onTouchEnd = () => {
+    if (Math.abs(deltaX.current) > 50) { go(deltaX.current < 0 ? 1 : -1); }
+    touchStartX.current = null; deltaX.current = 0;
+  };
+
   return (
     <section id="testimonianze" className="bg-white border-t border-slate-200" aria-labelledby="testimonianze-title">
       <div className="max-w-6xl mx-auto px-4 py-16">
         <h2 id="testimonianze-title" className="font-sans text-4xl md:text-5xl leading-tight text-slate-900">Testimonianze</h2>
-        {/* Layout responsive: su mobile scorrono orizzontalmente, su desktop 2 colonne */}
+
+        {/* Mobile slider */}
+        <div className="md:hidden mt-8">
+          <div className="relative overflow-hidden rounded-md ring-1 ring-slate-200 bg-white">
+            <ul className="flex transition-transform duration-300" style={{ transform: `translateX(-${idx * 100}%)`, width: `${items.length * 100}%` }}>
+              {items.map((t, i) => (
+                <li key={i} className="w-full shrink-0 px-5 py-8" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+                  <blockquote className="font-sans italic text-xl leading-relaxed text-slate-900">
+                    {t.body}
+                    <footer className="mt-4 text-sm not-italic font-sans text-slate-600">{t.author}</footer>
+                  </blockquote>
+                </li>
+              ))}
+            </ul>
+
+            {/* Controls */}
+            <button aria-label="Testimonianza precedente" onClick={() => go(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full p-2 ring-1 ring-slate-300 bg-white/80">
+              <ArrowRight className="h-4 w-4 -scale-x-100" />
+            </button>
+            <button aria-label="Testimonianza successiva" onClick={() => go(1)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-2 ring-1 ring-slate-300 bg-white/80">
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="mt-4 flex justify-center gap-2">
+            {items.map((_, i) => (
+              <button key={i} aria-label={`Vai alla testimonianza ${i + 1}`} onClick={() => setIdx(i)} className={`h-2.5 w-2.5 rounded-full ${idx === i ? 'bg-blue-700' : 'bg-slate-300'}`} />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: due colonne ben visibili */}
+        <div className="hidden md:grid mt-10 grid-cols-2 gap-10">
+          {items.map((t, i) => (
+            <blockquote key={i} className="font-sans italic text-2xl leading-snug text-slate-900">
+              {t.body}
+              <footer className="mt-4 text-sm not-italic font-sans text-slate-600">{t.author}</footer>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
         <div className="mt-10 flex gap-10 overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-10 md:overflow-visible">
           {/* G */}
           <blockquote className="font-sans italic text-2xl leading-snug text-slate-900 shrink-0 snap-center min-w-[90%] md:min-w-0">
