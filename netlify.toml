@@ -1,0 +1,9 @@
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+# (opzionale ma utile per SPA) fallback su index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
