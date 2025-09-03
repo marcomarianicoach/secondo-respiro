@@ -192,7 +192,7 @@ function Hero() {
           </div>
         </div>
         <div className="md:col-span-5">
-          <motion.div initial={{opacity:0, y:6}} animate={{opacity:1, y:[6,0,6]}} transition={{duration:10, repeat:Infinity}} className="relative rounded-md bg-white/10 ring-1 ring-white/20 p-6">
+          <div className="relative rounded-md bg-white/10 ring-1 ring-white/20 p-6">
             {(() => { const isLocal = !/^https?:\/\//.test(VIDEO_SRC) && !VIDEO_SRC.startsWith('/'); return (
               <>
                 <video id="video" className="w-full h-40 md:h-56 rounded bg-black/20 z-10 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
@@ -207,7 +207,7 @@ function Hero() {
               </>
             ); })()}
             <div className="pointer-events-none absolute -top-3 -right-2 select-none text-6xl font-black text-white/10">45’</div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -432,4 +432,5 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
+
 
