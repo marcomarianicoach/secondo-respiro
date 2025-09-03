@@ -310,25 +310,21 @@ function Objections() {
 }
 
 function Testimonials() {
-  // Dati delle testimonianze (facili da estendere)
-  const items = [
+  // Dati testimonianze normalizzati in paragrafi (evita mismatch di tag)
+  const items: { paras: string[]; author: string }[] = [
     {
-      body: (
-        <>
-          “Cercavo proprio Ossigeno... ed è quello che è arrivato! Volevo ritrovare fiducia nella mia persona e nella mia visione dal punto di vista del lavoro! È stato intenso ma un percorso vissuto e vero che ha lasciato un ottimo segno!”
-        </>
-      ),
+      paras: [
+        "Cercavo proprio Ossigeno... ed è quello che è arrivato! Volevo ritrovare fiducia nella mia persona e nella mia visione dal punto di vista del lavoro! È stato intenso ma un percorso vissuto e vero che ha lasciato un ottimo segno!",
+      ],
       author: "— G, 37 anni, professionista sanitario",
     },
     {
-      body: (
-        <>
-          <p>“𝐼𝑜 𝑡𝑖 ℎ𝑜 𝑠𝑜𝑙𝑜 𝑎𝑖𝑢𝑡𝑎𝑡𝑜 𝑎 𝑣𝑒𝑑𝑒𝑟𝑒 𝑐𝑜𝑠𝑒 𝑐ℎ𝑒, 𝑖𝑛 𝑡𝑒, 𝑝𝑒𝑟 𝑚𝑒 𝑒𝑟𝑎𝑛𝑜 𝑙𝑎𝑚𝑝𝑎𝑛𝑡𝑖. 𝐻𝑎𝑖 𝑓𝑎𝑡𝑡𝑜 𝑡𝑢𝑡𝑡𝑜 𝑡𝑢.”</p>
-          <p className="mt-4 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800">Una frase che non dimenticherò, nata da un confronto autentico nel mio percorso di coaching con Marco iniziato a Maggio 2025.</p>
-          <p className="mt-2 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800">Non è facile parlare apertamente, ma quando trovi qualcuno che ti ascolta senza giudicare o imporre… il mondo cambia con gentilezza.</p>
-          <p className="mt-2 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800">Un grazie sincero al mio coach Marco per non avermi mai detto “cosa fare”, ma per avermi aiutato a rivedere me stesso con occhi nuovi, riempiendo con le giuste cose il mio zainetto!</p>
-        </>
-      ),
+      paras: [
+        "“Io ti ho solo aiutato a vedere cose che, in te, per me erano lampanti. Hai fatto tutto tu.”",
+        "Una frase che non dimenticherò, nata da un confronto autentico nel mio percorso di coaching con Marco iniziato a Maggio 2025.",
+        "Non è facile parlare apertamente, ma quando trovi qualcuno che ti ascolta senza giudicare o imporre… il mondo cambia con gentilezza.",
+        "Un grazie sincero al mio coach Marco per non avermi mai detto ‘cosa fare’, ma per avermi aiutato a rivedere me stesso con occhi nuovi, riempiendo con le giuste cose il mio zainetto!",
+      ],
       author: "— F, 43 anni, real estate manager",
     },
   ];
@@ -346,6 +342,15 @@ function Testimonials() {
     touchStartX.current = null; deltaX.current = 0;
   };
 
+  const TestimonialBlock = ({ t }: { t: { paras: string[]; author: string } }) => (
+    <blockquote className="font-sans italic text-base sm:text-[1.05rem] md:text-xl leading-7 break-words hyphens-auto text-slate-900">
+      {t.paras.map((p, i) => (
+        <p key={i} className={i === 0 ? undefined : "mt-2 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800"}>{p}</p>
+      ))}
+      <footer className="mt-4 text-[0.925rem] not-italic font-sans text-slate-600">{t.author}</footer>
+    </blockquote>
+  );
+
   return (
     <section id="testimonianze" className="bg-white border-t border-slate-200" aria-labelledby="testimonianze-title">
       <div className="max-w-6xl mx-auto px-4 py-16">
@@ -356,11 +361,8 @@ function Testimonials() {
           <div className="relative overflow-hidden rounded-md ring-1 ring-slate-200 bg-white">
             <ul className="flex transition-transform duration-300" style={{ transform: `translateX(-${idx * 100}%)`, width: `${items.length * 100}%` }}>
               {items.map((t, i) => (
-                <li key={i} className="w-full shrink-0 px-5 py-8" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-                  <blockquote className="font-sans italic text-[1.05rem] md:text-xl leading-relaxed break-words text-slate-900">
-                    {t.body}
-                    <footer className="mt-4 text-sm not-italic font-sans text-slate-600">{t.author}</footer>
-                  </blockquote>
+                <li key={i} className="w-full shrink-0 px-4 py-5" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+                  <TestimonialBlock t={t} />
                 </li>
               ))}
             </ul>
@@ -383,10 +385,7 @@ function Testimonials() {
         {/* Desktop: due colonne ben visibili */}
         <div className="hidden md:grid mt-10 grid-cols-2 gap-10">
           {items.map((t, i) => (
-            <blockquote key={i} className="font-sans italic text-2xl leading-snug text-slate-900">
-              {t.body}
-              <footer className="mt-4 text-sm not-italic font-sans text-slate-600">{t.author}</footer>
-            </blockquote>
+            <TestimonialBlock key={i} t={t} />
           ))}
         </div>
       </div>
