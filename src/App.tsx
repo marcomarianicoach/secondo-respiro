@@ -357,7 +357,7 @@ function Testimonials() {
             <ul className="flex transition-transform duration-300" style={{ transform: `translateX(-${idx * 100}%)`, width: `${items.length * 100}%` }}>
               {items.map((t, i) => (
                 <li key={i} className="w-full shrink-0 px-5 py-8" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-                  <blockquote className="font-sans italic text-xl leading-relaxed text-slate-900">
+                  <blockquote className="font-sans italic text-[1.05rem] md:text-xl leading-relaxed break-words text-slate-900">
                     {t.body}
                     <footer className="mt-4 text-sm not-italic font-sans text-slate-600">{t.author}</footer>
                   </blockquote>
@@ -494,4 +494,3 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
-
