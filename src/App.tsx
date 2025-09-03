@@ -8,8 +8,7 @@ import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 const CALENDLY_OSSIGENO = "https://calendly.com/marcomarianicoach/ossigeno-45-gratuito"; // call gratuita
 const CALENDLY_SESSION = "https://calendly.com/marcomarianicoach"; // pagina con scelta tipologie
 // Video sorgente (se locale, verrà mostrato un avviso)
-const VIDEO_SRC = "/VIDEOLANDING.mp4"; // 
-
+const VIDEO_SRC = "/VIDEOLANDING.MP4"; // 
 const VIDEO_POSTER = `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0057FF" offset="0"/><stop stop-color="#7AA2FF" offset="1"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="56" fill="#fff" opacity="0.9">Secondo Respiro · Video</text></svg>')}`;
 
 function getHeaderOffset(): number { const el = document.getElementById('site-header'); return el ? el.offsetHeight : 0; }
