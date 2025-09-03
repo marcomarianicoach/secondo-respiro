@@ -97,6 +97,13 @@ function DevDiagnostics() {
     const stripeBadge = document.querySelector('[data-test="stripe-badge"]');
     results.push({ name: "stripe-badge-exists", pass: !!stripeBadge });
 
+    // Ulteriore test: il video deve essere cliccabile (pointer-events != none)
+    try {
+      const v2 = document.querySelector('video#video') as HTMLVideoElement | null;
+      const pe = v2 ? getComputedStyle(v2).pointerEvents : 'none';
+      results.push({ name: 'video-pointer-events', pass: pe !== 'none', note: pe });
+    } catch {}
+
     // eslint-disable-next-line no-console
     console.table(results);
   }, []);
@@ -178,7 +185,7 @@ function Hero() {
         <div className="md:col-span-7">
           <div className="text-xs tracking-widest uppercase text-white/90">Coaching 1:1 · Online</div>
           <h1 className="mt-3 font-sans text-5xl md:text-6xl leading-[1.03]">Secondo Respiro</h1>
-          <p className="mt-4 text-blue-100/90 max-w-2xl text-lg">Ho trasformato un burnout in un modo <strong>semplice e concreto</strong> di lavorare su <strong>obiettivi, strategie e confini</strong>. Senza fronzoli.</p>
+          <p className="mt-4 text-blue-100/90 max-w-2xl text-lg">Ho trasformato un'esperienza personale di forte burnout in un modo semplice e concreto di lavorare su stress da lavoro correlato, autostima e crisi di risultati con obiettivi definiti e strategie chiare. Senza fronzoli, solo con ascolto attivo, feedback costruttivi e domande potenti. NO TERAPIA, SOLO COACHING.</p>
           <p className="mt-3 text-blue-100/80 max-w-2xl">Ciao, sono Marco: Sales Manager da quasi vent'anni, e coach accreditato ICF. Con la call gratuita “Ossigeno 45'” capiamo se posso esserti utile.</p>
           <div className="mt-7 flex gap-3 flex-wrap">
             <a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="px-6 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a>
@@ -188,7 +195,7 @@ function Hero() {
           <motion.div initial={{opacity:0, y:6}} animate={{opacity:1, y:[6,0,6]}} transition={{duration:10, repeat:Infinity}} className="relative rounded-md bg-white/10 ring-1 ring-white/20 p-6">
             {(() => { const isLocal = !/^https?:\/\//.test(VIDEO_SRC) && !VIDEO_SRC.startsWith('/'); return (
               <>
-                <video id="video" className="w-full h-40 md:h-56 rounded bg-black/20" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
+                <video id="video" className="w-full h-40 md:h-56 rounded bg-black/20 z-10 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
                   <source src={VIDEO_SRC} type="video/mp4" />
                   Il tuo browser non supporta il tag video.
                 </video>
@@ -199,7 +206,7 @@ function Hero() {
                 )}
               </>
             ); })()}
-            <div className="absolute -top-3 -right-2 select-none text-6xl font-black text-white/10">45’</div>
+            <div className="pointer-events-none absolute -top-3 -right-2 select-none text-6xl font-black text-white/10">45’</div>
           </motion.div>
         </div>
       </div>
@@ -425,3 +432,4 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
+
