@@ -120,7 +120,7 @@ export default function SecondoRespiroLanding() {
 
   return (
     <div id="top" className="min-h-screen bg-white text-slate-900">
-      <style dangerouslySetInnerHTML={{ __html: ".font-sans{font-family:'Manrope',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans','Liberation Sans',sans-serif;}" }} />
+      <style dangerouslySetInnerHTML={{ __html: ".font-sans{font-family:'Manrope',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans','Liberation Sans',sans-serif;} .clamped{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}" }} />
       <SmoothHashScroll />
       <DevDiagnostics />
       <Header active={active} />
@@ -342,14 +342,35 @@ function Testimonials() {
     touchStartX.current = null; deltaX.current = 0;
   };
 
-  const TestimonialBlock = ({ t }: { t: { paras: string[]; author: string } }) => (
-    <blockquote className="font-sans italic text-base sm:text-[1.05rem] md:text-xl leading-7 break-words hyphens-auto text-slate-900">
-      {t.paras.map((p, i) => (
-        <p key={i} className={i === 0 ? undefined : "mt-2 not-italic text-[1.05rem] md:text-[1.15rem] text-slate-800"}>{p}</p>
-      ))}
-      <footer className="mt-4 text-[0.925rem] not-italic font-sans text-slate-600">{t.author}</footer>
-    </blockquote>
-  );
+  const TestimonialBlock = ({ t, clamp = true }: { t: { paras: string[]; author: string }; clamp?: boolean }) => {
+    const [expanded, setExpanded] = useState(!clamp);
+    const first = t.paras[0] || "";
+    const rest = t.paras.slice(1);
+    return (
+      <div>
+        <blockquote className="font-sans text-[clamp(15px,3.9vw,17px)] md:text-xl leading-[1.65] break-words hyphens-auto text-slate-900">
+          <p className={`${!expanded && clamp ? 'clamped' : ''}`} style={!expanded && clamp ? ({ WebkitLineClamp: 12 } as any) : undefined}>
+            <em>{first}</em>
+            {rest.map((p, i) => (
+              <span key={i}>
+                <br />
+                <br />
+                {p}
+              </span>
+            ))}
+          </p>
+          <footer className="mt-4 text-[0.925rem] not-italic font-sans text-slate-600">{t.author}</footer>
+        </blockquote>
+        {clamp && (
+          <div className="mt-3">
+            <button onClick={() => setExpanded((v) => !v)} className="text-sm font-medium text-blue-700 underline underline-offset-2">
+              {expanded ? 'Mostra meno' : 'Mostra tutto'}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <section id="testimonianze" className="bg-white border-t border-slate-200" aria-labelledby="testimonianze-title">
@@ -358,34 +379,38 @@ function Testimonials() {
 
         {/* Mobile slider */}
         <div className="md:hidden mt-8">
-          <div className="relative overflow-hidden rounded-md ring-1 ring-slate-200 bg-white">
+          <div className="relative overflow-x-hidden rounded-md ring-1 ring-slate-200 bg-white">
             <ul className="flex transition-transform duration-300" style={{ transform: `translateX(-${idx * 100}%)`, width: `${items.length * 100}%` }}>
               {items.map((t, i) => (
-                <li key={i} className="w-full shrink-0 px-4 py-5" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-                  <TestimonialBlock t={t} />
+                <li key={i} className="w-full shrink-0 px-3 py-4" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+                  <TestimonialBlock t={t} clamp />
                 </li>
               ))}
             </ul>
 
             {/* Controls */}
-            <button aria-label="Testimonianza precedente" onClick={() => go(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full p-2 ring-1 ring-slate-300 bg-white/80">
+            
+            
+          </div>
+          <div className="mt-4 flex items-center justify-center gap-4">
+            <button aria-label="Testimonianza precedente" onClick={() => go(-1)} className="rounded-full p-2 ring-1 ring-slate-300 bg-white">
               <ArrowRight className="h-4 w-4 -scale-x-100" />
             </button>
-            <button aria-label="Testimonianza successiva" onClick={() => go(1)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-2 ring-1 ring-slate-300 bg-white/80">
+            <div className="flex gap-2">
+              {items.map((_, i) => (
+                <button key={i} aria-label={`Vai alla testimonianza ${i + 1}`} onClick={() => setIdx(i)} className={`${idx === i ? 'bg-blue-700' : 'bg-slate-300'} h-2.5 w-2.5 rounded-full`} />
+              ))}
+            </div>
+            <button aria-label="Testimonianza successiva" onClick={() => go(1)} className="rounded-full p-2 ring-1 ring-slate-300 bg-white">
               <ArrowRight className="h-4 w-4" />
             </button>
-          </div>
-          <div className="mt-4 flex justify-center gap-2">
-            {items.map((_, i) => (
-              <button key={i} aria-label={`Vai alla testimonianza ${i + 1}`} onClick={() => setIdx(i)} className={`h-2.5 w-2.5 rounded-full ${idx === i ? 'bg-blue-700' : 'bg-slate-300'}`} />
-            ))}
           </div>
         </div>
 
         {/* Desktop: due colonne ben visibili */}
         <div className="hidden md:grid mt-10 grid-cols-2 gap-10">
           {items.map((t, i) => (
-            <TestimonialBlock key={i} t={t} />
+            <TestimonialBlock key={i} t={t} clamp={false} />
           ))}
         </div>
       </div>
