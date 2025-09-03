@@ -105,6 +105,7 @@ function DevDiagnostics() {
       results.push({ name: 'video-pointer-events', pass: pe !== 'none', note: pe });
     } catch {}
 
+    results.push({ name: "one-testimonianze-section", pass: document.querySelectorAll('section#testimonianze').length === 1, note: String(document.querySelectorAll('section#testimonianze').length) });
     // eslint-disable-next-line no-console
     console.table(results);
   }, []);
@@ -392,25 +393,6 @@ function Testimonials() {
     </section>
   );
 }
-        <div className="mt-10 flex gap-10 overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-10 md:overflow-visible">
-          {/* G */}
-          <blockquote className="font-sans italic text-2xl leading-snug text-slate-900 shrink-0 snap-center min-w-[90%] md:min-w-0">
-            “Cercavo proprio Ossigeno... ed è quello che è arrivato! Volevo ritrovare fiducia nella mia persona e nella mia visione dal punto di vista del lavoro! È stato intenso ma un percorso vissuto e vero che ha lasciato un ottimo segno!”
-            <footer className="mt-4 text-sm not-italic font-sans text-slate-600">— G, 37 anni, professionista sanitario</footer>
-          </blockquote>
-          {/* F */}
-          <blockquote className="font-sans italic text-2xl leading-snug text-slate-900 shrink-0 snap-center min-w-[90%] md:min-w-0">
-            <p>“𝐼𝑜 𝑡𝑖 ℎ𝑜 𝑠𝑜𝑙𝑜 𝑎𝑖𝑢𝑡𝑎𝑡𝑜 𝑎 𝑣𝑒𝑑𝑒𝑟𝑒 𝑐𝑜𝑠𝑒 𝑐ℎ𝑒, 𝑖𝑛 𝑡𝑒, 𝑝𝑒𝑟 𝑚𝑒 𝑒𝑟𝑎𝑛𝑜 𝑙𝑎𝑚𝑝𝑎𝑛𝑡𝑖. 𝐻𝑎𝑖 𝑓𝑎𝑡𝑡𝑜 𝑡𝑢𝑡𝑡𝑜 𝑡𝑢.”</p>
-            <p className="mt-4 not-italic text-[1.15rem] text-slate-800">Una frase che non dimenticherò, nata da un confronto autentico nel mio percorso di coaching con Marco iniziato a Maggio 2025.</p>
-            <p className="mt-2 not-italic text-[1.15rem] text-slate-800">Non è facile parlare apertamente, ma quando trovi qualcuno che ti ascolta senza giudicare o imporre… il mondo cambia con gentilezza.</p>
-            <p className="mt-2 not-italic text-[1.15rem] text-slate-800">Un grazie sincero al mio coach Marco per non avermi mai detto “cosa fare”, ma per avermi aiutato a rivedere me stesso con occhi nuovi, riempiendo con le giuste cose il mio zainetto!</p>
-            <footer className="mt-4 text-sm not-italic font-sans text-slate-600">— F, 43 anni, real estate manager</footer>
-          </blockquote>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function StripeBadge() {
   // Badge Stripe minimale (senza asset esterni) per evitare richieste di rete
@@ -512,3 +494,4 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
+
