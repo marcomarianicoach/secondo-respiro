@@ -9,6 +9,7 @@ const CALENDLY_OSSIGENO = "https://calendly.com/marcomarianicoach/ossigeno-45-gr
 const CALENDLY_SESSION = "https://calendly.com/marcomarianicoach"; // pagina con scelta tipologie
 // Video sorgente (se locale, verrà mostrato un avviso)
 const VIDEO_SRC = "/VIDEOLANDING.MP4"; // 
+// Poster inline (nessuna rete); sostituisci con un URL https se vuoi un frame reale
 const VIDEO_POSTER = `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0057FF" offset="0"/><stop stop-color="#7AA2FF" offset="1"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="56" fill="#fff" opacity="0.9">Secondo Respiro · Video</text></svg>')}`;
 
 function getHeaderOffset(): number { const el = document.getElementById('site-header'); return el ? el.offsetHeight : 0; }
@@ -89,8 +90,8 @@ function DevDiagnostics() {
     const v = document.querySelector('video#video') as HTMLVideoElement | null;
     results.push({ name: "video-element-exists", pass: !!v });
     const vSrc = v?.querySelector('source')?.getAttribute('src') || '';
-    const isHttp = /^https?:\/\//.test(vSrc);
-    results.push({ name: "video-src-http", pass: isHttp, note: isHttp ? 'ok' : 'local/non-http' });
+    const isValidSrc = /^https?:\/\//.test(vSrc) || vSrc.startsWith('/');
+    results.push({ name: "video-src-valid", pass: !!v && isValidSrc, note: isValidSrc ? 'ok' : 'invalid-src' });
 
     // Stripe badge presente
     const stripeBadge = document.querySelector('[data-test="stripe-badge"]');
@@ -185,7 +186,7 @@ function Hero() {
         </div>
         <div className="md:col-span-5">
           <motion.div initial={{opacity:0, y:6}} animate={{opacity:1, y:[6,0,6]}} transition={{duration:10, repeat:Infinity}} className="relative rounded-md bg-white/10 ring-1 ring-white/20 p-6">
-            {(() => { const isLocal = !/^https?:\/\//.test(VIDEO_SRC); return (
+            {(() => { const isLocal = !/^https?:\/\//.test(VIDEO_SRC) && !VIDEO_SRC.startsWith('/'); return (
               <>
                 <video id="video" className="w-full h-40 md:h-56 rounded bg-black/20" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
                   <source src={VIDEO_SRC} type="video/mp4" />
