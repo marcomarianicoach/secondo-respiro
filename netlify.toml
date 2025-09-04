@@ -3,25 +3,25 @@
   publish   = "dist"
   functions = "netlify/functions"
 
-# Servi /accordo/ come pagina statica (eccezione al catch-all SPA)
+# Serve i file statici nella cartella /accordo/
 [[redirects]]
   from   = "/accordo/*"
   to     = "/accordo/:splat"
   status = 200
 
-# (opzionale ma comodo) URL senza slash → aggiunge slash
+# Redireziona /accordo → /accordo/ (per caricare index.html)
 [[redirects]]
   from   = "/accordo"
   to     = "/accordo/"
   status = 301
 
-# Catch-all per la tua SPA
+# Catch-all per la tua SPA React/Vite
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
   status = 200
 
-# Evita che Google indicizzi la pagina del contratto
+# Evita indicizzazione della pagina accordo
 [[headers]]
   for = "/accordo/*"
   [headers.values]
