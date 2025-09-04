@@ -1,8 +1,23 @@
 [build]
-  command = "npm install && npm run build"
-  publish = "dist"
+  command   = "npm run build"      # Netlify installa le dipendenze da solo
+  publish   = "dist"               # cartella pubblicata
+  functions = "netlify/functions"  # dove sta send-pdf.js
 
+# ✅ Assicura che i file statici in /accordo/ vengano serviti
+#    prima del catch-all della SPA
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from   = "/accordo/*"
+  to     = "/accordo/:splat"
   status = 200
+
+# Catch-all per la tua SPA (React/Vite)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# (Facoltativo) Evita indicizzazione della pagina accordo
+[[headers]]
+  for = "/accordo/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
