@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Codice Etico & Accordo di Coaching – Marco Mariani</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-YcsIP3oGgV6rK0hD6J7yB0RUeJ8iO4Yh7Kf+VfWQ8W9u3kB3m0c0h9N1r2sQm8lQ2t7Z0Tz8s5kWb9C7NQe8sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    @media print {
+      #form, #actions, #alert { display: none !important; }
+      body { background: white; }
+      #contract { box-shadow: none; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="max-w-4xl mx-auto p-4 sm:p-6">
+    <header class="mb-6">
+      <h1 class="text-2xl font-bold">Codice Etico & Accordo di Coaching One‑to‑One Online</h1>
+      <p class="text-sm text-gray-600">Italia – Lingua italiana • Stampabile e firmabile con firma elettronica semplice</p>
+    </header>
+
+    <!-- FORM -->
+    <section id="form" class="bg-white rounded-2xl shadow p-4 sm:p-6 space-y-4">
+      <h2 class="text-lg font-semibold">Dati del Coachee & Consensi</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Nome e Cognome *</label>
+          <input id="coacheeName" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="Es. Anna Rossi" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Codice Fiscale</label>
+          <input id="coacheeCF" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="(opzionale)" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Email *</label>
+          <input id="coacheeEmail" type="email" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="nome@esempio.it" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Telefono *</label>
+          <input id="coacheePhone" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="es. 3331234567" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Referente di emergenza (facoltativo)</label>
+          <input id="emergencyName" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="Nome e Cognome" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Telefono referente (facoltativo)</label>
+          <input id="emergencyPhone" class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="es. 3331234567" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <label class="inline-flex items-start gap-2"><input id="consentWhatsApp" type="checkbox" class="mt-1"> <span>Consento l'uso di <strong>WhatsApp</strong> per comunicazioni non emergenziali</span></label>
+        <label class="inline-flex items-start gap-2"><input id="consentRecording" type="checkbox" class="mt-1"> <span>Consento eventuali <strong>registrazioni</strong> <em>previo consenso di entrambe le parti</em></span></label>
+        <label class="inline-flex items-start gap-2"><input id="consentReview" type="checkbox" class="mt-1"> <span>Consento la <strong>recensione anonima</strong> (iniziale nome, età, professione)</span></label>
+        <label class="inline-flex items-start gap-2"><input id="consentExtraSEE" type="checkbox" class="mt-1"> <span>Autorizzo eventuali <strong>trasferimenti extra‑SEE</strong> non strettamente necessari</span></label>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div>
+          <label class="inline-flex items-start gap-2"><input id="acceptTerms" type="checkbox" class="mt-1" required> <span>Ho letto e <strong>accetto</strong> i termini del documento</span></label>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Firma (digitare nome) *</label>
+            <input id="signatureName" class="mt-1 w-full rounded-xl border px-3 py-2" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Data *</label>
+            <input id="signatureDate" type="date" class="mt-1 w-full rounded-xl border px-3 py-2" required />
+          </div>
+        </div>
+      </div>
+
+      <div id="actions" class="flex flex-wrap gap-2 pt-3">
+        <button id="btnPreview" class="px-4 py-2 rounded-xl bg-gray-800 text-white shadow">Genera anteprima</button>
+        <button id="btnPrint" class="px-4 py-2 rounded-xl border shadow">Stampa</button>
+        <button id="btnSubmit" class="px-4 py-2 rounded-xl bg-teal-600 text-white shadow">Firma e invia</button>
+      </div>
+      <p id="alert" class="text-sm text-red-600 hidden"></p>
+    </section>
+
+    <!-- CONTRACT PREVIEW -->
+    <section id="contract" class="mt-6 bg-white rounded-2xl shadow p-6 leading-relaxed">
+      <div class="text-center mb-4">
+        <h2 class="text-xl font-bold">CODICE ETICO & ACCORDO DI COACHING ONE‑TO‑ONE ONLINE</h2>
+        <p class="text-sm text-gray-600">(Italia – Lingua italiana)</p>
+      </div>
+
+      <p class="text-xs text-gray-500 mb-4"><em>Nota: modello operativo privo di consulenza legale. Si consiglia verifica professionale.</em></p>
+
+      <h3 class="font-semibold mt-2">Coach (Titolare del Trattamento / Fornitore del servizio)</h3>
+      <p><strong>Marco Mariani</strong> – CF: <strong>MRNMRC83P04A944P</strong><br/>
+      Sede: <strong>Vicolo Ticino, 9 – 20025 Legnano (MI)</strong><br/>
+      Email: <strong>marcomariani.coach@gmail.com</strong> – Tel: <strong>349 466 4612</strong><br/>
+      Sito: <strong>www.secondorespiro.it</strong></p>
+
+      <h3 class="font-semibold mt-4">Coachee (Cliente)</h3>
+      <p>
+        Nome e Cognome: <span id="pv_name" class="font-medium">___________________________</span><br/>
+        CF (se disponibile): <span id="pv_cf" class="font-medium">___________________________</span><br/>
+        Email: <span id="pv_email" class="font-medium">___________________________</span>  Tel: <span id="pv_phone" class="font-medium">___________________________</span>
+      </p>
+
+      <h3 class="font-semibold mt-4">Oggetto</h3>
+      <p>Il presente documento disciplina il percorso di coaching individuale online erogato da Marco Mariani tramite Google Meet.</p>
+
+      <h3 class="font-semibold mt-4">1) Principi etici e campo d’azione</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Adesione a standard professionali</strong> – Il Coach dichiara adesione ai principi del <strong>Codice Etico ICF</strong> e operatività nel quadro della <strong>Legge 4/2013</strong>.</li>
+        <li><strong>Inquadramento</strong> – Il coaching <strong>non è</strong> consulenza psicologica, psicoterapia, diagnosi o trattamento sanitario. In presenza di segnali di disagio clinico o rischio, il Coach può interrompere e <strong>indirizzare</strong> il Coachee a professionisti sanitari.</li>
+        <li><strong>Destinatari</strong> – Servizio rivolto <strong>solo a maggiorenni</strong>.</li>
+        <li><strong>Non discriminazione</strong> – Nessuna discriminazione per genere, identità/espressione di genere, orientamento, età, etnia, religione, disabilità, stato civile o altra condizione tutelata.</li>
+        <li><strong>Conflitti d’interesse</strong> – In caso di rapporti preesistenti o situazioni potenzialmente conflittuali, si procede solo previa <strong>disclosure</strong> e <strong>consenso scritto</strong> del Coachee.</li>
+        <li><strong>Confini relazionali</strong> – Vietata ogni relazione romantica/sessuale. Regali solo simbolici. <strong>Divieto di contanti</strong>.</li>
+        <li><strong>Condotta</strong> – Entrambe le parti si presentano sobrie, puntuali e rispettose; la sessione può essere interrotta in caso di violazioni.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">2) Riservatezza e sue eccezioni</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Riservatezza</strong> – Quanto condiviso in sessione è confidenziale.</li>
+        <li><strong>Eccezioni</strong> – La riservatezza può essere limitata se vi è <strong>pericolo grave e imminente</strong> per il Coachee o terzi, per <strong>ordini dell’Autorità</strong> o altri obblighi di legge.</li>
+        <li><strong>Emergenze</strong> – In caso di rischio grave e imminente, il Coachee <strong>autorizza</strong> il Coach a contattare i <strong>servizi di emergenza</strong> e, se fornito, un <strong>referente di emergenza</strong>.</li>
+      </ol>
+      <p>Contatto di emergenza (facoltativo): <span id="pv_emergency" class="font-medium">___________________________</span></p>
+
+      <h3 class="font-semibold mt-4">3) Struttura delle sessioni</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Call conoscitiva gratuita</strong>: 45 minuti (+ 15 min buffer).</li>
+        <li><strong>Sessioni di coaching</strong>: 60 minuti (+ 15 min buffer).</li>
+        <li><strong>Frequenza</strong>: da concordare con il Coachee.</li>
+        <li><strong>Canale</strong>: online via Google Meet; <strong>fuso orario</strong> Europe/Rome.</li>
+        <li><strong>Guasti tecnici</strong> – Se problemi di connessione/piattaforma impediscono &gt; 15 minuti di lavoro utile, la sessione è ripianificata senza penali.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">4) Comunicazioni tra sessioni</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Canali ufficiali</strong>: Email e WhatsApp.</li>
+        <li><strong>Tempi di risposta</strong>: entro 12 ore dalla ricezione (lun‑dom, festività incluse).</li>
+        <li>Le comunicazioni non sostituiscono le sessioni e non sono idonee per emergenze.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">5) Registrazioni, testimonianze e immagine</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Registrazioni</strong> – Vietate salvo <strong>consenso scritto di entrambe le parti</strong> e comunque previo consenso espresso del Coachee.</li>
+        <li><strong>Testimonianze</strong> – Possibile richiesta recensione; se acconsentita, pubblicabile sulla landing page in forma anonima (iniziale nome, età, professione). Consenso revocabile.</li>
+        <li><strong>Uso di foto/video/immagine</strong> – Non autorizzato.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">6) Tipologia di prestazioni</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Servizi offerti</strong>:
+          <ul class="list-disc pl-5">
+            <li>Call conoscitiva gratuita (45 minuti + 15 minuti di buffer)</li>
+            <li>Sessioni di coaching one‑to‑one (60 minuti + 15 minuti di buffer)</li>
+            <li>Pacchetti da 4, 6 e 8 sessioni</li>
+          </ul>
+        </li>
+        <li><strong>Pagamenti accettati</strong>: Stripe, PayPal, bonifico. <strong>Divieto di contanti</strong>.</li>
+        <li><strong>Scadenze</strong>: pagamento entro 48 ore prima della seduta.</li>
+        <li><strong>Fattura</strong>: emessa entro 24 ore successive alla seduta; intestazione con i dati forniti dal Coachee.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">7) Pacchetti, validità, sospensioni, rimborsi</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Validità</strong>: pacchetti 4 e 6 → 6 mesi dall’acquisto; pacchetto 8 → 12 mesi.</li>
+        <li><strong>Sospensioni</strong>: consentite per motivi documentati fino a 2 mesi complessivi.</li>
+        <li><strong>Trasferibilità</strong>: pacchetti nominali e non trasferibili.</li>
+        <li><strong>Rimborsi</strong>: una volta iniziato il pacchetto, importi non rimborsabili salvo recesso pro‑quota e interruzione per non appropriatezza.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">8) Cancellazioni, rinvii, no‑show, ritardi</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>In tempo</strong>: nessuna penale se ≥ 24 ore prima.</li>
+        <li><strong>Tardive & no‑show (Pacchetti)</strong>: 1 occasione senza penali per pacchetto; dalla seconda, la sessione è conteggiata come effettuata (100%).</li>
+        <li><strong>Sessione singola</strong>: oltre 24 ore/no‑show → penale 100%.</li>
+        <li><strong>Forza maggiore</strong>: esenta da penali se documentata.</li>
+        <li><strong>Ritardi</strong>: tolleranza max 15 minuti; la sessione termina entro 15 minuti oltre l’orario concordato.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">9) Diritto di recesso</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Entro 14 giorni e prima dell’inizio: rimborso integrale (al netto di commissioni non recuperabili).</li>
+        <li>Se iniziato entro 14 giorni: rimborso pro‑quota delle sessioni non fruite.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">10) Interruzione del percorso da parte del Coach</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Il Coach può rifiutare l’avvio o interrompere il percorso se non appropriato (necessità clinica, conflitto d’interesse, violazioni etiche).</li>
+        <li>Per pacchetti in corso è riconosciuto il rimborso pro‑quota delle sessioni non fruite.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">11) Privacy (GDPR) – Informativa e consensi</h3>
+      <p><strong>Titolare del trattamento</strong>: Marco Mariani (dati in intestazione).</p>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Finalità</strong>: gestione del rapporto contrattuale; amministrazione, contabilità e fatturazione; comunicazioni organizzative; sicurezza della piattaforma; adempimenti legali.</li>
+        <li><strong>Base giuridica</strong>: esecuzione del contratto (art. 6.1.b); obbligo legale (art. 6.1.c) per adempimenti fiscali; <strong>consenso</strong> (art. 6.1.a) per attività facoltative.</li>
+        <li><strong>Dati trattati</strong>: identificativi e contatti; pagamento e fatturazione; note di coaching (evitare dati sanitari o categorie particolari salvo scelta consapevole del Coachee, con eventuale consenso esplicito).</li>
+        <li><strong>Conservazione</strong>: 5 anni dalla conclusione del rapporto. Note e documenti su Google Cloud.</li>
+        <li><strong>Destinatari/Fornitori</strong>: Google, Stripe, PayPal, WhatsApp; possibili trattamenti extra‑SEE con Clausole Contrattuali Standard.</li>
+        <li><strong>Diritti</strong>: accesso, rettifica, cancellazione, limitazione, portabilità, opposizione; revoca dei consensi; reclamo al Garante.</li>
+        <li><strong>Contatti privacy</strong>: marcomariani.coach@gmail.com. Nessun DPO nominato.</li>
+      </ol>
+
+      <p class="mt-3"><strong>Consensi facoltativi (spuntati se d’accordo):</strong><br/>
+        <span id="pv_c_whatsapp">☐</span> WhatsApp come canale di comunicazione non emergenziale<br/>
+        <span id="pv_c_recording">☐</span> Registrazioni di singole sessioni, previo consenso di entrambe le parti<br/>
+        <span id="pv_c_review">☐</span> Recensione anonima (iniziale nome, età, professione) pubblicabile su landing page<br/>
+        <span id="pv_c_extrasee">☐</span> Eventuali trasferimenti extra‑SEE non strettamente necessari all’esecuzione del contratto
+      </p>
+
+      <h3 class="font-semibold mt-4">12) Reclami e risoluzione</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Reclami</strong>: inviare a <strong>marcomariani.coach@gmail.com</strong> entro <strong>15 giorni</strong> dall’evento.</li>
+        <li><strong>Legge applicabile/Foro</strong>: legge italiana; foro competente Milano.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">13) Disposizioni finali</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Intero accordo</strong> – Il presente documento sostituisce intese precedenti su oggetto e condizioni.</li>
+        <li><strong>Modifiche</strong> – Valide solo se scritte e sottoscritte da entrambe le parti.</li>
+        <li><strong>Nullità parziale</strong> – La nullità di una clausola non inficia la validità delle altre.</li>
+      </ol>
+
+      <h3 class="font-semibold mt-4">Dichiarazioni del Coachee</h3>
+      <ul class="list-disc pl-5">
+        <li>Dichiaro di aver letto, compreso e <strong>accettato</strong> il presente Codice Etico & Accordo.</li>
+        <li>Comprendo che il coaching non è un servizio sanitario né sostituisce terapie o cure mediche.</li>
+        <li><strong>Autorizzo</strong>, in caso di pericolo grave e imminente, il contatto dei <strong>servizi di emergenza</strong> e, se fornito, del mio referente di emergenza.</li>
+      </ul>
+
+      <div class="mt-4">
+        <p><strong>Luogo e data</strong>: <span id="pv_place">______________________________</span>, <span id="pv_date">____ / ____ / ______</span></p>
+        <p class="mt-2"><strong>Accettazione con firma elettronica semplice</strong></p>
+        <p>☐ Accetto i termini e condizioni del presente documento</p>
+        <p><strong>Nome e Cognome (digitato):</strong> <span id="pv_signatureName">__________________________________</span></p>
+        <p><strong>Firma del Coachee:</strong> _____________________________________</p>
+        <p><strong>Firma del Coach:</strong> Marco Mariani _____________________________________</p>
+      </div>
+    </section>
+
+    <footer class="text-xs text-gray-500 mt-6">© <span id="year"></span> Marco Mariani. Tutti i diritti riservati.</footer>
+  </div>
+
+  <script>
+    // ====== CONFIGURAZIONE ======
+    const API_ENDPOINT = '/.netlify/functions/send-pdf'; // Imposta l'endpoint della funzione serverless
+
+    // ====== HELPER ======
+    const $ = (id) => document.getElementById(id);
+    function fmtDateISOtoIT(iso) {
+      if (!iso) return '____ / ____ / ______';
+      const d = new Date(iso);
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd} / ${mm} / ${yyyy}`;
+    }
+
+    // Default data = oggi
+    const today = new Date();
+    $("signatureDate").valueAsDate = today;
+    $("year").textContent = today.getFullYear();
+
+    function renderPreview() {
+      const name = $("coacheeName").value.trim();
+      const cf = $("coacheeCF").value.trim();
+      const email = $("coacheeEmail").value.trim();
+      const phone = $("coacheePhone").value.trim();
+      const emName = $("emergencyName").value.trim();
+      const emPhone = $("emergencyPhone").value.trim();
+      const sigName = $("signatureName").value.trim();
+      const sigDate = $("signatureDate").value;
+
+      $("pv_name").textContent = name || '___________________________';
+      $("pv_cf").textContent = cf || '___________________________';
+      $("pv_email").textContent = email || '___________________________';
+      $("pv_phone").textContent = phone || '___________________________';
+      $("pv_emergency").textContent = (emName || emPhone) ? `${emName || ''} ${emPhone || ''}`.trim() : '___________________________';
+      $("pv_signatureName").textContent = sigName || '__________________________________';
+      $("pv_date").textContent = fmtDateISOtoIT(sigDate);
+      $("pv_place").textContent = 'Roma (o luogo di sottoscrizione)';
+
+      // Consensi
+      $("pv_c_whatsapp").textContent = $("consentWhatsApp").checked ? '☑' : '☐';
+      $("pv_c_recording").textContent = $("consentRecording").checked ? '☑' : '☐';
+      $("pv_c_review").textContent = $("consentReview").checked ? '☑' : '☐';
+      $("pv_c_extrasee").textContent = $("consentExtraSEE").checked ? '☑' : '☐';
+    }
+
+    $("btnPreview").addEventListener('click', (e) => {
+      e.preventDefault();
+      renderPreview();
+      $("alert").classList.add('hidden');
+    });
+
+    $("btnPrint").addEventListener('click', (e) => {
+      e.preventDefault();
+      renderPreview();
+      window.print();
+    });
+
+    $("btnSubmit").addEventListener('click', async (e) => {
+      e.preventDefault();
+      // Validazioni minime
+      const required = ["coacheeName","coacheeEmail","coacheePhone","signatureName","signatureDate"]; 
+      for (const id of required) { if (!$(id).value) { $("alert").textContent = 'Compila tutti i campi obbligatori (*)'; $("alert").classList.remove('hidden'); return; } }
+      if (!$("acceptTerms").checked) { $("alert").textContent = 'Devi accettare i termini per procedere.'; $("alert").classList.remove('hidden'); return; }
+
+      renderPreview();
+
+      // Genera PDF
+      const element = $("contract");
+      const name = $("coacheeName").value.trim();
+      const sigDate = $("signatureDate").value;
+      const filename = `Accordo_Coaching_${name || 'Coachee'}_${sigDate || 'data'}.pdf`.replace(/\s+/g,'_');
+
+      const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'pt', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        const worker = html2pdf().from(element).set(opt).toPdf();
+        const pdf = await worker.get('pdf');
+        const dataUri = pdf.output('datauristring');
+        const base64 = dataUri.split(',')[1];
+
+        // Invia al backend
+        const res = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pdfBase64: base64,
+            filename,
+            subject: 'Nuovo Accordo di Coaching firmato',
+            body: 'In allegato il PDF del Codice Etico & Accordo di Coaching firmato.',
+            coachee: {
+              name: $("coacheeName").value.trim(),
+              cf: $("coacheeCF").value.trim(),
+              email: $("coacheeEmail").value.trim(),
+              phone: $("coacheePhone").value.trim(),
+              emergency: `${$("emergencyName").value.trim()} ${$("emergencyPhone").value.trim()}`.trim(),
+              consents: {
+                whatsapp: $("consentWhatsApp").checked,
+                recording: $("consentRecording").checked,
+                review: $("consentReview").checked,
+                extrasee: $("consentExtraSEE").checked
+              },
+              signedAt: sigDate
+            }
+          })
+        });
+
+        if (!res.ok) throw new Error('Invio non riuscito');
+
+        alert('Documento firmato inviato con successo. Riceverai una copia via email.');
+        $("alert").classList.add('hidden');
+      } catch (err) {
+        console.error(err);
+        $("alert").textContent = 'Errore durante invio/generazione PDF. Riprova tra poco o contatta il Coach.';
+        $("alert").classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
