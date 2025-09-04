@@ -6,10 +6,15 @@ import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 // ==========================
 const CALENDLY_OSSIGENO = "https://calendly.com/marcomarianicoach/ossigeno-45-gratuito"; // call gratuita
 const CALENDLY_SESSION = "https://calendly.com/marcomarianicoach"; // pagina con scelta tipologie
-// Video sorgente (se locale, verrà mostrato un avviso)
+
+// ==========================
+// Accordo (NUOVO)
+// ==========================
+const ACCORDO_URL = "/accordo/"; // pagina accordo (apre in nuova scheda)
+
 // Video sorgente (se locale, verrà mostrato un avviso)
 const VIDEO_SRC = "/VIDEOLANDING.MP4"; // MP4 H.264/AAC consigliato
-const VIDEO_SRC_WEBM = "/VIDEOLANDING.webm"; // opzionale fallback WebM (VP9/Opus) // // 
+const VIDEO_SRC_WEBM = "/VIDEOLANDING.webm"; // opzionale fallback WebM (VP9/Opus)
 // Poster inline (nessuna rete); sostituisci con un URL https se vuoi un frame reale
 const VIDEO_POSTER = `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0057FF" offset="0"/><stop stop-color="#7AA2FF" offset="1"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="56" fill="#fff" opacity="0.9">Secondo Respiro · Video</text></svg>')}`;
 
@@ -179,6 +184,11 @@ function DevDiagnostics() {
     } catch {}
 
     results.push({ name: "one-testimonianze-section", pass: document.querySelectorAll('section#testimonianze').length === 1, note: String(document.querySelectorAll('section#testimonianze').length) });
+
+    // Verifica presenza link Accordo (header o footer)
+    const accordoLinks = document.querySelectorAll(`a[href="${ACCORDO_URL}"]`);
+    results.push({ name: "accordo-link-exists", pass: accordoLinks.length >= 2, note: String(accordoLinks.length) });
+
     // eslint-disable-next-line no-console
     console.table(results);
   }, []);
@@ -240,26 +250,64 @@ function Header({ active }: { active: string | null }) {
     <header id="site-header" className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         <a href="#top" className="font-sans font-semibold tracking-tight text-xl"><span className="text-blue-700">SECONDO RESPIRO</span></a>
+
+        {/* Desktop nav */}
         <nav className="hidden md:flex gap-8 text-sm" aria-label="Navigazione principale">
           {links.map(({id, label}) => (
-            <a key={id} href={`#${id}`} className={`flex items-center gap-2 hover:text-blue-700 ${active === id ? 'text-blue-700' : ''}`} aria-current={active === id ? 'page' : undefined}>
+            <a
+              key={id}
+              href={`#${id}`}
+              className={`flex items-center gap-2 hover:text-blue-700 ${active === id ? 'text-blue-700' : ''}`}
+              aria-current={active === id ? 'page' : undefined}
+            >
               <span className={`h-1.5 w-1.5 rounded-full bg-blue-700 transition-opacity ${active === id ? 'opacity-100' : 'opacity-0'}`} aria-hidden />
               {label}
             </a>
           ))}
+          {/* Link esterno: Leggi e firma l’Accordo (sempre sottolineato) */}
+          <a
+            href={ACCORDO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 decoration-1 hover:text-blue-700 whitespace-nowrap"
+          >
+            Leggi e firma l’Accordo
+          </a>
         </nav>
+
         <div className="hidden md:flex items-center gap-3 ml-6">
           <a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-md ring-1 ring-slate-300 hover:ring-blue-700">Prenota Ossigeno 45'</a>
           <a href={CALENDLY_SESSION} target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-md ring-1 ring-slate-300 hover:ring-blue-700">Prenota sessione</a>
         </div>
-        <button className="md:hidden inline-flex items-center justify-center rounded-md p-2 ring-1 ring-slate-300" aria-label={open ? 'Chiudi menu' : 'Apri menu'} aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
+
+        {/* Burger mobile */}
+        <button
+          className="md:hidden inline-flex items-center justify-center rounded-md p-2 ring-1 ring-slate-300"
+          aria-label={open ? 'Chiudi menu' : 'Apri menu'}
+          aria-expanded={open}
+          onClick={() => setOpen(v => !v)}
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
+
+      {/* Drawer mobile */}
       {open && (
         <div className="md:hidden border-t">
           <div className="px-4 py-4 flex flex-col gap-3">
             {links.map(({id, label}) => (
               <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="py-1">{label}</a>
             ))}
+            {/* Accordo anche nel menu mobile */}
+            <a
+              href={ACCORDO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-1 underline underline-offset-2"
+              onClick={() => setOpen(false)}
+            >
+              Leggi e firma l’Accordo
+            </a>
             <a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-md ring-1 ring-slate-300">Prenota Ossigeno 45'</a>
             <a href={CALENDLY_SESSION} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-md ring-1 ring-slate-300">Prenota sessione</a>
           </div>
@@ -298,7 +346,6 @@ function Hero() {
                 )}
               </>
             ); })()}
-            
           </div>
         </div>
       </div>
@@ -507,12 +554,14 @@ function Testimonials() {
                   onTouchStart={onTouchStart}
                   onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
-                >                  <TestimonialBlock t={t} clamp />
+                >
+                  <TestimonialBlock t={t} clamp />
                 </li>
               ))}
             </ul>
           </div>
 
+        {/* Paginazione */}
           <div className="mt-4 flex items-center justify-center gap-4">
             <button aria-label="Testimonianza precedente" onClick={() => go(-1)} className="rounded-full p-2 ring-1 ring-slate-300 bg-white">
               <ArrowRight className="h-4 w-4 -scale-x-100" />
@@ -541,8 +590,6 @@ function Testimonials() {
     </section>
   );
 }
-
-
 
 function StripeBadge() {
   // Badge Stripe minimale (senza asset esterni) per evitare richieste di rete
@@ -606,6 +653,17 @@ function Footer() {
           <ul className="mt-2 space-y-1">
             <li><a className="underline" href="#cta">Prenota Ossigeno 45'</a></li>
             <li><a className="underline" href={CALENDLY_SESSION} target="_blank" rel="noreferrer">Prenota sessione</a></li>
+            {/* NUOVO: link all’accordo, sempre sottolineato */}
+            <li>
+              <a
+                className="underline"
+                href={ACCORDO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Leggi e firma l’Accordo
+              </a>
+            </li>
             <li><a className="underline" href="#per-chi">Per chi</a></li>
             <li><a className="underline" href="#come-funziona">Come funziona</a></li>
             <li><a className="underline" href="#obiezioni">Domande</a></li>
