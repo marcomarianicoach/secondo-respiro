@@ -208,10 +208,10 @@ function Hero() {
           </div>
         </div>
         <div className="md:col-span-5">
-          <div className="relative rounded-md bg-white/10 ring-1 ring-white/20 p-6 pointer-events-auto">
+          <div className="relative p-0 pointer-events-auto">
             {(() => { const isLocal = !/^https?:\/\//.test(VIDEO_SRC) && !VIDEO_SRC.startsWith('/'); return (
               <>
-                <video id="video" className="w-full h-40 md:h-56 rounded bg-black/20 z-10 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
+                <video id="video" className="block w-full rounded-md ring-1 ring-white/20 bg-black/20 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
                   <source src={VIDEO_SRC} type="video/mp4" />
                   <source src={VIDEO_SRC_WEBM} type="video/webm" />
                   Il tuo browser non supporta il tag video.
@@ -569,3 +569,4 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
+
