@@ -6,12 +6,198 @@ import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 // ==========================
 const CALENDLY_OSSIGENO = "https://calendly.com/marcomarianicoach/ossigeno-45-gratuito"; // call gratuita
 const CALENDLY_SESSION = "https://calendly.com/marcomarianicoach"; // pagina con scelta tipologie
-// Video sorgente (se locale, verrà mostrato un avviso)
+
+// ==========================
+// SEO / Metadati
+// ==========================
+const SITE_NAME = "Secondo Respiro";
+const DEFAULT_TITLE = "Secondo Respiro – Coaching 1:1 contro stress e burnout (online)";
+const DEFAULT_DESC =
+  "Call gratuita Ossigeno 45’: valutiamo se posso esserti utile su stress da lavoro correlato, autostima e risultati. Coaching 1:1 online in italiano.";
+// Se possibile usa un URL assoluto su https per l'immagine social (1200x630)
+const OG_IMAGE_URL = "https://www.tuo-dominio.it/og-image.jpg"; // TODO: aggiorna con il tuo URL reale
+const CANONICAL_PATH = "/"; // se la landing ha un path diverso (es. /landing), aggiornalo
+
 // Video sorgente (se locale, verrà mostrato un avviso)
 const VIDEO_SRC = "/VIDEOLANDING.MP4"; // MP4 H.264/AAC consigliato
-const VIDEO_SRC_WEBM = "/VIDEOLANDING.webm"; // opzionale fallback WebM (VP9/Opus) // // 
+const VIDEO_SRC_WEBM = "/VIDEOLANDING.webm"; // opzionale fallback WebM (VP9/Opus)
 // Poster inline (nessuna rete); sostituisci con un URL https se vuoi un frame reale
 const VIDEO_POSTER = `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0057FF" offset="0"/><stop stop-color="#7AA2FF" offset="1"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="56" fill="#fff" opacity="0.9">Secondo Respiro · Video</text></svg>')}`;
+
+// ==========================
+// Helper SEO: inietta meta tag nel <head> senza dipendenze
+// ==========================
+function MetaTags({ title = DEFAULT_TITLE, description = DEFAULT_DESC }: { title?: string; description?: string }) {
+  useEffect(() => {
+    const d = document;
+    // lang
+    try { d.documentElement.setAttribute("lang", "it"); } catch {}
+
+    // funzione helper
+    const upsertMeta = (attr: "name" | "property", key: string, value: string) => {
+      if (!value) return;
+      let el = d.head.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = d.createElement("meta");
+        el.setAttribute(attr, key);
+        d.head.appendChild(el);
+      }
+      el.setAttribute("content", value);
+    };
+
+    // Titolo
+    d.title = title;
+
+    // Canonical
+    const origin = window.location?.origin ?? "https://www.tuo-dominio.it";
+    const canonicalHref = origin + CANONICAL_PATH;
+    let linkCanonical = d.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!linkCanonical) {
+      linkCanonical = d.createElement("link");
+      linkCanonical.setAttribute("rel", "canonical");
+      d.head.appendChild(linkCanonical);
+    }
+    linkCanonical.setAttribute("href", canonicalHref);
+
+    // Robots (esplicito)
+    upsertMeta("name", "robots", "index,follow");
+
+    // Description
+    upsertMeta("name", "description", description);
+
+    // Open Graph
+    upsertMeta("property", "og:type", "website");
+    upsertMeta("property", "og:locale", "it_IT");
+    upsertMeta("property", "og:site_name", SITE_NAME);
+    upsertMeta("property", "og:title", title);
+    upsertMeta("property", "og:description", description);
+    upsertMeta("property", "og:url", canonicalHref);
+    if (OG_IMAGE_URL && /^https?:\/\//.test(OG_IMAGE_URL)) upsertMeta("property", "og:image", OG_IMAGE_URL);
+
+    // Twitter
+    upsertMeta("name", "twitter:card", "summary_large_image");
+    upsertMeta("name", "twitter:title", title);
+    upsertMeta("name", "twitter:description", description);
+    if (OG_IMAGE_URL && /^https?:\/\//.test(OG_IMAGE_URL)) upsertMeta("name", "twitter:image", OG_IMAGE_URL);
+  }, [title, description]);
+  return null;
+}
+
+// ==========================
+// JSON-LD (WebSite, ProfessionalService, Service, FAQ + opzionale Video)
+// ==========================
+function SEOJsonLd() {
+  const origin = typeof window !== "undefined" && window.location?.origin ? window.location.origin : "https://www.tuo-dominio.it";
+  const canonical = origin + CANONICAL_PATH;
+
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    url: canonical,
+    name: `${SITE_NAME} — Coaching 1:1`,
+    inLanguage: "it-IT",
+  };
+
+  const org = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: `${SITE_NAME} — Coaching 1:1`,
+    url: canonical,
+    email: "marcomariani.coach@gmail.com",
+    telephone: "+39 349 466 4612",
+    areaServed: "IT",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Vicolo Ticino 9",
+      addressLocality: "Legnano",
+      postalCode: "20025",
+      addressRegion: "MI",
+      addressCountry: "IT",
+    },
+  };
+
+  const service = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Coaching 1:1 online in italiano",
+    provider: { "@type": "ProfessionalService", name: SITE_NAME },
+    areaServed: "IT",
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: CALENDLY_SESSION,
+    },
+  };
+
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Scetticismo: il coaching fa per me?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Con Ossigeno 45’ valutiamo insieme, senza impegno, se posso esserti di aiuto. Se non è il momento, risorse o referral.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Tempo: non ne ho.",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Percorso essenziale: online, ritmo e durata su misura, ≥ 4 sessioni consigliate, chat tra sessioni (entro 12h).",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Costo: come funziona?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Prezzo personalizzato. Dopo la call ricevi proposta scritta chiara. Nessuna sorpresa.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "È terapia?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "No. È coaching. Se emergono elementi clinici, referral a professionisti più idonei.",
+        },
+      },
+    ],
+  };
+
+  // VideoObject opzionale: solo se VIDEO_SRC è un URL assoluto https (consigliato)
+  const videoIsAbsolute = /^https?:\/\//.test(VIDEO_SRC);
+  const videoObject = videoIsAbsolute
+    ? {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        name: "Secondo Respiro – Introduzione",
+        description: "Video di presentazione del percorso di coaching Secondo Respiro.",
+        thumbnailUrl: OG_IMAGE_URL && /^https?:\/\//.test(OG_IMAGE_URL) ? [OG_IMAGE_URL] : undefined,
+        uploadDate: new Date().toISOString().split("T")[0],
+        contentUrl: VIDEO_SRC,
+        embedUrl: canonical,
+      }
+    : null;
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
+      {videoObject ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoObject) }} />
+      ) : null}
+    </>
+  );
+}
 
 function getHeaderOffset(): number { const el = document.getElementById('site-header'); return el ? el.offsetHeight : 0; }
 function SmoothHashScroll() {
@@ -129,6 +315,7 @@ function useIsMobile() {
   }, []);
   return isMobile;
 }
+
 export default function SecondoRespiroLanding() {
   const active = useActiveSectionScroll(["per-chi","come-funziona","obiezioni","testimonianze","coachee","cta"]);
 
@@ -137,6 +324,11 @@ export default function SecondoRespiroLanding() {
       <style dangerouslySetInnerHTML={{ __html: ".font-sans{font-family:'Manrope',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans','Liberation Sans',sans-serif;} .clamped{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}" }} />
       <SmoothHashScroll />
       <DevDiagnostics />
+
+      {/* SEO: meta tag + JSON-LD */}
+      <MetaTags />
+      <SEOJsonLd />
+
       <Header active={active} />
       <Hero />
       <ProofBar />
@@ -174,8 +366,8 @@ function Header({ active }: { active: string | null }) {
           ))}
         </nav>
         <div className="hidden md:flex items-center gap-3 ml-6">
-          <a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-md ring-1 ring-slate-300 hover:ring-blue-700">Prenota Ossigeno 45'</a>
-          <a href={CALENDLY_SESSION} target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-md ring-1 ring-slate-300 hover:ring-blue-700">Prenota sessione</a>
+          <a href={CALENDLY_OSSIGENO} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-md ring-1 ring-slate-300 hover:ring-blue-700">Prenota Ossigeno 45'</a>
+          <a href={CALENDLY_SESSION} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-md ring-1 ring-slate-300 hover:ring-blue-700">Prenota sessione</a>
         </div>
         <button className="md:hidden inline-flex items-center justify-center rounded-md p-2 ring-1 ring-slate-300" aria-label={open ? 'Chiudi menu' : 'Apri menu'} aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
       </div>
@@ -185,8 +377,8 @@ function Header({ active }: { active: string | null }) {
             {links.map(({id, label}) => (
               <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="py-1">{label}</a>
             ))}
-            <a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-md ring-1 ring-slate-300">Prenota Ossigeno 45'</a>
-            <a href={CALENDLY_SESSION} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-md ring-1 ring-slate-300">Prenota sessione</a>
+            <a href={CALENDLY_OSSIGENO} target="_blank" rel="noopener noreferrer" className="px-4 py-2 rounded-md ring-1 ring-slate-300">Prenota Ossigeno 45'</a>
+            <a href={CALENDLY_SESSION} target="_blank" rel="noopener noreferrer" className="px-4 py-2 rounded-md ring-1 ring-slate-300">Prenota sessione</a>
           </div>
         </div>
       )}
@@ -195,6 +387,7 @@ function Header({ active }: { active: string | null }) {
 }
 
 function Hero() {
+  const isLocal = !/^https?:\/\//.test(VIDEO_SRC) && !VIDEO_SRC.startsWith('/');
   return (
     <section id="hero" className="bg-[#0057FF] text-white">
       <div className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-12 gap-10 items-center">
@@ -204,26 +397,21 @@ function Hero() {
           <p className="mt-4 text-blue-100/90 max-w-2xl text-lg">Ho trasformato un'esperienza personale di forte burnout in un modo semplice e concreto di lavorare su stress da lavoro correlato, autostima e crisi di risultati con obiettivi definiti e strategie chiare. Senza fronzoli, solo con ascolto attivo, feedback costruttivi e domande potenti. NO TERAPIA, SOLO COACHING.</p>
           <p className="mt-3 text-blue-100/80 max-w-2xl">Ciao, sono Marco: Sales Manager da quasi vent'anni, e coach accreditato ICF. Con la call gratuita “Ossigeno 45'” capiamo se posso esserti utile.</p>
           <div className="mt-7 flex gap-3 flex-wrap">
-            <a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="px-6 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a>
+            <a href={CALENDLY_OSSIGENO} target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a>
           </div>
         </div>
         <div className="md:col-span-5">
           <div className="relative p-0 pointer-events-auto">
-            {(() => { const isLocal = !/^https?:\/\//.test(VIDEO_SRC) && !VIDEO_SRC.startsWith('/'); return (
-              <>
-                <video id="video" className="block w-full rounded-md ring-1 ring-white/20 bg-black/20 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
-                  <source src={VIDEO_SRC} type="video/mp4" />
-                  <source src={VIDEO_SRC_WEBM} type="video/webm" />
-                  Il tuo browser non supporta il tag video.
-                </video>
-                {isLocal && (
-                  <div className="mt-2 text-xs text-blue-100/80">
-                    Nota: il video è referenziato da un percorso <em>locale</em>. Carica il file online e sostituisci <code>VIDEO_SRC</code> con un URL https.
-                  </div>
-                )}
-              </>
-            ); })()}
-            
+            <video id="video" className="block w-full rounded-md ring-1 ring-white/20 bg-black/20 pointer-events-auto" controls preload="metadata" playsInline poster={VIDEO_POSTER}>
+              <source src={VIDEO_SRC} type="video/mp4" />
+              <source src={VIDEO_SRC_WEBM} type="video/webm" />
+              Il tuo browser non supporta il tag video.
+            </video>
+            {isLocal && (
+              <div className="mt-2 text-xs text-blue-100/80">
+                Nota: il video è referenziato da un percorso <em>locale</em>. Carica il file online e sostituisci <code>VIDEO_SRC</code> con un URL https.
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -432,7 +620,8 @@ function Testimonials() {
                   onTouchStart={onTouchStart}
                   onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
-                >                  <TestimonialBlock t={t} clamp />
+                >
+                  <TestimonialBlock t={t} clamp />
                 </li>
               ))}
             </ul>
@@ -467,8 +656,6 @@ function Testimonials() {
   );
 }
 
-
-
 function StripeBadge() {
   // Badge Stripe minimale (senza asset esterni) per evitare richieste di rete
   return (
@@ -488,7 +675,7 @@ function Coachee() {
         <SectionTitle title="Sei già coachee? Prenota la tua sessione" />
         <p className="mt-2 text-slate-700 max-w-2xl text-sm">Se hai già iniziato il percorso, puoi prenotare in autonomia la prossima sessione.</p>
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <a href={CALENDLY_SESSION} target="_blank" rel="noreferrer" className="px-6 py-3 rounded-md bg-[#0057FF] text-white hover:bg-[#1A6BFF]">Prenota sessione <span className="inline-block ml-1 align-middle"><ArrowRight className="h-4 w-4" /></span></a>
+          <a href={CALENDLY_SESSION} target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-md bg-[#0057FF] text-white hover:bg-[#1A6BFF]">Prenota sessione <span className="inline-block ml-1 align-middle"><ArrowRight className="h-4 w-4" /></span></a>
           <div className="flex items-center gap-2 text-xs text-slate-600"><StripeBadge /><span>Pagamento sicuro tramite Stripe — Fattura entro 24 ore successive alla call</span></div>
         </div>
         <div className="mt-3 text-xs text-slate-500">Serve aiuto? Scrivi a <a className="underline" href="mailto:marcomariani.coach@gmail.com">marcomariani.coach@gmail.com</a> o WhatsApp: <a className="underline" href="tel:+393494664612">+39 349 466 4612</a>.</div>
@@ -503,7 +690,7 @@ function CTA() {
       <div className="relative max-w-7xl mx-auto px-4 py-16 text-center">
         <h2 className="font-sans text-3xl md:text-4xl leading-tight">Ossigeno 45’ — Call gratuita di valutazione</h2>
         <p className="mt-2 text-blue-100">Valutiamo insieme, con la prima call gratuita, se posso esserti di aiuto. Slot e prenotazioni su Calendly.</p>
-        <div className="mt-6"><a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="inline-flex px-7 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a></div>
+        <div className="mt-6"><a href={CALENDLY_OSSIGENO} target="_blank" rel="noopener noreferrer" className="inline-flex px-7 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a></div>
       </div>
     </section>
   );
@@ -523,14 +710,14 @@ function Footer() {
             <li>Email: <a className="underline" href="mailto:marcomariani.coach@gmail.com">marcomariani.coach@gmail.com</a></li>
             <li>Telefono / WhatsApp: <a className="underline" href="tel:+393494664612">+39 349 466 4612</a></li>
             <li>Indirizzo: Vicolo Ticino 9, 20025 Legnano (MI)</li>
-            <li>Slot e prenotazioni: <a className="underline" href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer">Calendly</a></li>
+            <li>Slot e prenotazioni: <a className="underline" href={CALENDLY_OSSIGENO} target="_blank" rel="noopener noreferrer">Calendly</a></li>
           </ul>
         </div>
         <div>
           <div className="font-semibold">Risorse</div>
           <ul className="mt-2 space-y-1">
             <li><a className="underline" href="#cta">Prenota Ossigeno 45'</a></li>
-            <li><a className="underline" href={CALENDLY_SESSION} target="_blank" rel="noreferrer">Prenota sessione</a></li>
+            <li><a className="underline" href={CALENDLY_SESSION} target="_blank" rel="noopener noreferrer">Prenota sessione</a></li>
             <li><a className="underline" href="#per-chi">Per chi</a></li>
             <li><a className="underline" href="#come-funziona">Come funziona</a></li>
             <li><a className="underline" href="#obiezioni">Domande</a></li>
@@ -560,7 +747,7 @@ function FloatingCTA() {
   }, []);
   return (
     <div className={`hidden md:block fixed right-6 z-40 transition ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
-      <a href={CALENDLY_SESSION} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-md bg-white ring-1 ring-slate-200 text-[#0057FF] shadow-[0_8px_24px_rgba(0,87,255,.25)] hover:shadow-[0_12px_36px_rgba(0,87,255,.35)]">
+      <a href={CALENDLY_SESSION} target="_blank" rel="noopener noreferrer" className="px-5 py-3 rounded-md bg-white ring-1 ring-slate-200 text-[#0057FF] shadow-[0_8px_24px_rgba(0,87,255,.25)] hover:shadow-[0_12px_36px_rgba(0,87,255,.35)]">
         Prenota sessione <span className="inline-block ml-1 align-middle"><ArrowRight className="h-4 w-4" /></span>
       </a>
     </div>
@@ -569,4 +756,3 @@ function FloatingCTA() {
 
 // Keep this small proof bar at the very top for visual continuity
 function TopBar() { return <div className="h-1.5 w-full bg-blue-700" aria-hidden />; }
-
