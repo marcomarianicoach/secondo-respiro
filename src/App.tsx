@@ -398,7 +398,7 @@ function HowItWorks() {
     { title: "3) Una sessione tipo", items: ["Apertura (3’): obiettivo e accordi.", "Esplorazione su ciò che conta.", "Chiarezza: riformulazione + feedback.", "Chiusura (5’): takeaway e prossimo step.", "Se emergono profili clinici → referral."] },
   ];
   return (
-    <section id="come-funziona" className="bg-white">
+    <section id="come-funziona" className="bg.white">
       <div className="max-w-7xl mx-auto px-4 py-16">
         <SectionTitle title="Come funziona" />
         <div className="mt-8 grid md:grid-cols-3 gap-6">
@@ -462,6 +462,15 @@ function Testimonials() {
         "Un grazie sincero al mio coach Marco per non avermi mai detto ‘cosa fare’, ma per avermi aiutato a rivedere me stesso con occhi nuovi, riempiendo con le giuste cose il mio zainetto!",
       ],
       author: "— F, 43 anni, real estate manager",
+    },
+    // Nuova testimonianza
+    {
+      paras: [
+        "Conoscere Marco è stato proprio un regalo che mi ha fatto la vita! Ad un certo punto della stessa, metaforicamente parlando, mi ero persa per strada (o meglio, come mi aveva detto lui, dovevo solo ricordarmi come si faceva a camminare, prima di iniziare a correre) e ho incrociato la mia strada con la sua.",
+        "Parlare con lui mi ha fatta sentire accolta, mai giudicata, in un certo senso capita, profondamente. Si è creata una connessione di fiducia e uno spazio sicuro che mi ha permesso di lavorare su me stessa ed evolvere da quello stato, grazie al suo supporto! Marco ha un anima pura e luminosa e il suo intento di aiutare gli altri arriva grazie anche alla condivisione delle sue esperienze che, l’hanno reso la meravigliosa persona che oggi è, e dona al prossimo.",
+        "Non smetterò mai di ringraziarlo e consiglio a chi avrà la fortuna di poterlo incontrare di ritenersi molto fortunatə.",
+      ],
+      author: "— A, free lance, Milano",
     },
   ];
 
@@ -625,7 +634,7 @@ function CTA() {
       <div className="relative max-w-7xl mx-auto px-4 py-16 text-center">
         <h2 className="font-sans text-3xl md:text-4xl leading-tight">Ossigeno 45’ — Call gratuita di valutazione</h2>
         <p className="mt-2 text-blue-100">Valutiamo insieme, con la prima call gratuita, se posso esserti di aiuto. Slot e prenotazioni su Calendly.</p>
-        <div className="mt-6"><a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="inline-flex px-7 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a></div>
+        <div className="mt-6"><a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="inline-flex px-7 py-3 rounded-md bg.white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a></div>
       </div>
     </section>
   );
@@ -668,7 +677,6 @@ function Footer() {
             <li><a className="underline" href="#come-funziona">Come funziona</a></li>
             <li><a className="underline" href="#obiezioni">Domande</a></li>
             <li><a className="underline" href="#testimonianze">Testimonianze</a></li>
-            <li><a className="underline" href="#coachee">Area coachee</a></li>
             <li><a className="underline" href="#hero">Video (120s)</a></li>
           </ul>
         </div>
