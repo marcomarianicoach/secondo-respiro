@@ -264,12 +264,12 @@ function Header({ active }: { active: string | null }) {
               {label}
             </a>
           ))}
-          {/* Link esterno: Leggi e firma l’Accordo (sempre sottolineato) */}
+          {/* Link esterno: Leggi e firma l’Accordo (senza sottolineatura su desktop) */}
           <a
             href={ACCORDO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 decoration-1 hover:text-blue-700 whitespace-nowrap"
+            className="hover:text-blue-700 whitespace-nowrap"
           >
             Leggi e firma l’Accordo
           </a>
@@ -298,7 +298,7 @@ function Header({ active }: { active: string | null }) {
             {links.map(({id, label}) => (
               <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="py-1">{label}</a>
             ))}
-            {/* Accordo anche nel menu mobile */}
+            {/* Accordo anche nel menu mobile (resta sottolineato) */}
             <a
               href={ACCORDO_URL}
               target="_blank"
@@ -398,7 +398,7 @@ function HowItWorks() {
     { title: "3) Una sessione tipo", items: ["Apertura (3’): obiettivo e accordi.", "Esplorazione su ciò che conta.", "Chiarezza: riformulazione + feedback.", "Chiusura (5’): takeaway e prossimo step.", "Se emergono profili clinici → referral."] },
   ];
   return (
-    <section id="come-funziona" className="bg.white">
+    <section id="come-funziona" className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-16">
         <SectionTitle title="Come funziona" />
         <div className="mt-8 grid md:grid-cols-3 gap-6">
@@ -634,7 +634,7 @@ function CTA() {
       <div className="relative max-w-7xl mx-auto px-4 py-16 text-center">
         <h2 className="font-sans text-3xl md:text-4xl leading-tight">Ossigeno 45’ — Call gratuita di valutazione</h2>
         <p className="mt-2 text-blue-100">Valutiamo insieme, con la prima call gratuita, se posso esserti di aiuto. Slot e prenotazioni su Calendly.</p>
-        <div className="mt-6"><a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="inline-flex px-7 py-3 rounded-md bg.white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a></div>
+        <div className="mt-6"><a href={CALENDLY_OSSIGENO} target="_blank" rel="noreferrer" className="inline-flex px-7 py-3 rounded-md bg-white text-[#0B1220] ring-1 ring-white/30">Prenota Ossigeno 45'</a></div>
       </div>
     </section>
   );
@@ -677,7 +677,8 @@ function Footer() {
             <li><a className="underline" href="#come-funziona">Come funziona</a></li>
             <li><a className="underline" href="#obiezioni">Domande</a></li>
             <li><a className="underline" href="#testimonianze">Testimonianze</a></li>
-            <li><a className="underline" href="#hero">Video (120s)</a></li>
+            {/* Etichetta aggiornata: Video */}
+            <li><a className="underline" href="#hero">Video</a></li>
           </ul>
         </div>
       </div>
